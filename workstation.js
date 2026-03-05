@@ -3,8 +3,151 @@
    ================================================ */
 
 // ==========================================
-// MOCK DATA
+// URL PARAMS & SCENE CONFIG
 // ==========================================
+const urlParams = new URLSearchParams(window.location.search);
+const currentScene = urlParams.get('scene') || 'novel';
+
+// Scene-specific configurations
+const SCENE_CONFIG = {
+  novel: {
+    name: '小说创作',
+    title: '星际迷航：暗影纪元',
+    chapterLabel: '章',
+    totalWords: '18,234',
+    settingLabels: ['设定', '标签', '角色'],
+    chatWelcome: '你好！我是你的创作助手。我已经了解了你的小说设定和角色信息，可以随时帮你推进剧情、优化文字、或解答创作中的疑问。',
+  },
+  script: {
+    name: '剧本生成',
+    title: '雾中列车',
+    chapterLabel: '幕',
+    totalWords: '8,620',
+    settingLabels: ['设定', '标签', '角色'],
+    chatWelcome: '你好！我是你的剧本创作助手。我可以帮你设计场景、打磨对白、调整戏剧节奏，或讨论角色动机与冲突设计。',
+  },
+  storyboard: {
+    name: '分镜脚本',
+    title: '深渊回响',
+    chapterLabel: '场',
+    totalWords: '5,993',
+    settingLabels: ['设定', '标签', '角色'],
+    chatWelcome: '你好！我是你的分镜创作助手。可以帮你设计镜头语言、画面构图、运镜方式和剪辑节奏。',
+  },
+  interpret: {
+    name: '内容解读',
+    title: '《百年孤独》深度解读',
+    chapterLabel: '节',
+    totalWords: '6,280',
+    settingLabels: ['主题', '标签', '素材'],
+    chatWelcome: '你好！我是你的内容解读助手。可以帮你提炼核心观点、组织论述结构、丰富论据素材。',
+  },
+  general: {
+    name: '通用写作',
+    title: '新建文档',
+    chapterLabel: '章',
+    totalWords: '0',
+    settingLabels: ['设定', '标签', '角色'],
+    chatWelcome: '你好！我是你的写作助手。你可以自由创作任何内容，我随时提供帮助。',
+  }
+};
+
+// Scene-specific chapter data
+const SCENE_CHAPTERS = {
+  novel: {
+    list: [
+      { title: '第一章 启入星域', words: 2847 },
+      { title: '第二章 暗影之门', words: 3120 },
+      { title: '第三章 虚空回响', words: 4567 },
+      { title: '第四章 星际追逐', words: 3890 },
+      { title: '第五章 最后防线', words: 3810 },
+    ]
+  },
+  script: {
+    list: [
+      { title: '第一幕 月台', words: 2340 },
+      { title: '第二幕 车厢', words: 3180 },
+      { title: '第三幕 迷雾', words: 3100 },
+    ]
+  },
+  storyboard: {
+    list: [
+      { title: 'S01 开场·废墟', words: 420 },
+      { title: 'S02 地下通道', words: 385 },
+      { title: 'S03 首次遭遇', words: 510 },
+      { title: 'S04 追逐', words: 460 },
+      { title: 'S05 藏身处', words: 390 },
+      { title: 'S06 回忆闪回', words: 320 },
+      { title: 'S07 对峙', words: 480 },
+      { title: 'S08 真相', words: 550 },
+      { title: 'S09 抉择', words: 440 },
+      { title: 'S10 坠落', words: 520 },
+      { title: 'S11 觉醒', words: 380 },
+      { title: 'S12 尾声', words: 338 },
+    ]
+  },
+  interpret: {
+    list: [
+      { title: '引言：魔幻现实的入口', words: 1250 },
+      { title: '第一节 时间的循环', words: 1820 },
+      { title: '第二节 家族的宿命', words: 1640 },
+      { title: '第三节 孤独的七种面孔', words: 1570 },
+    ]
+  },
+  general: {
+    list: [
+      { title: '第一章 新章节', words: 0 },
+    ]
+  }
+};
+
+// Scene-specific first chapter content in the editor
+const SCENE_EDITOR_CONTENT = {
+  novel: null, // already in HTML
+  script: `<h2 class="chapter-title">第一幕 月台</h2>
+<p class="no-indent" style="color:#86909C;font-size:13px;margin-bottom:4px;">【场景：1947年冬，北方某城火车站月台。浓雾。凌晨。】</p>
+<p class="no-indent" style="color:#86909C;font-size:13px;margin-bottom:20px;">【灯光昏黄，雾气中隐约可见铁轨延伸至远处消失。月台上只有零星几个旅客的剪影。】</p>
+<p class="no-indent"><strong>宋迟</strong>（画外音）</p>
+<p>每个人的一生中，都有一趟不该上的列车。你以为你在赶路，其实你在逃。你以为你在逃，其实你哪儿也去不了。</p>
+<p class="no-indent" style="color:#86909C;font-size:13px;margin-bottom:8px;">【宋迟提着一只旧皮箱走上月台。三十岁出头，瘦削，穿一件洗得发白的灰色大衣，围巾裹到下巴。他走路的姿态有一种刻意的从容，像在掩饰什么。】</p>
+<p class="no-indent" style="color:#86909C;font-size:13px;margin-bottom:8px;">【他在一根铁柱旁停下，放下皮箱，从大衣口袋里摸出一张皱巴巴的车票，对着昏黄的灯看了一眼。】</p>
+<p class="no-indent"><strong>宋迟</strong>（自言自语，轻声）</p>
+<p>三等车厢……还有四十分钟。</p>
+<p class="no-indent" style="color:#86909C;font-size:13px;margin-bottom:8px;">【他把车票塞回口袋，目光不经意地扫过月台另一端——】</p>
+<p class="no-indent" style="color:#86909C;font-size:13px;margin-bottom:8px;">【一个女人站在雾里。穿深蓝色旗袍外罩黑色呢子外套，手里拎着一只小型手提箱。她没有看任何人，只是盯着铁轨尽头那片浓雾，一动不动。】</p>
+<p class="no-indent" style="color:#86909C;font-size:13px;margin-bottom:8px;">【宋迟的目光在她身上停了两秒——然后移开，像怕被烫到似的。】</p>
+<p class="no-indent"><strong>检票员</strong>（远处高喊）</p>
+<p>开往锦城的47次列车——即将进站——请旅客准备检票——</p>
+<p class="no-indent" style="color:#86909C;font-size:13px;margin-bottom:8px;">【远处，火车汽笛的长鸣声穿透浓雾传来。铁轨开始微微震动。】</p>
+<p class="no-indent" style="color:#86909C;font-size:13px;margin-bottom:8px;">【宋迟拎起皮箱，朝检票口走去。经过那个女人身旁时，他闻到了一种味道——栀子花，干燥的、已经开始枯萎但仍然固执地散发着甜香的栀子花。】</p>
+<p class="no-indent" style="color:#86909C;font-size:13px;margin-bottom:8px;">【他的脚步顿了一下。只一下。然后继续往前走。】</p>
+<p class="no-indent">（灯光渐暗。火车进站的轰鸣声渐强。）</p>`,
+
+  storyboard: `<h2 class="chapter-title">S01 开场·废墟</h2>
+<table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+<tr style="background:#F7F8FA;"><th style="padding:10px 14px;border:1px solid #E5E6EB;text-align:left;width:80px;">镜号</th><th style="padding:10px 14px;border:1px solid #E5E6EB;text-align:left;width:100px;">景别/运镜</th><th style="padding:10px 14px;border:1px solid #E5E6EB;text-align:left;">画面描述</th><th style="padding:10px 14px;border:1px solid #E5E6EB;text-align:left;width:120px;">声音</th><th style="padding:10px 14px;border:1px solid #E5E6EB;text-align:left;width:80px;">时长</th></tr>
+<tr><td style="padding:10px 14px;border:1px solid #E5E6EB;">1-1</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">大远景<br>航拍下推</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">灰蒙蒙的天空下，一座废弃的城市废墟。高楼的骨架像巨人的肋骨刺向天空。镜头从云层中缓缓下推，穿过断裂的高架桥。</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">风声（低频）<br>金属嘎吱声</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">5s</td></tr>
+<tr><td style="padding:10px 14px;border:1px solid #E5E6EB;">1-2</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">中景<br>缓推</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">镜头穿过一扇破碎的玻璃窗进入建筑内部。地面散落着生锈的罐头、碎玻璃、褪色的照片。一只野猫从阴影中窜过。</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">玻璃碎裂余响<br>猫叫（远）</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">4s</td></tr>
+<tr><td style="padding:10px 14px;border:1px solid #E5E6EB;">1-3</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">特写<br>固定</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">一双沾满灰尘的手缓缓拨开瓦砾，露出下面一个生锈的金属盒子。手指关节粗大，指甲缝嵌着黑色的泥土。</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">碎石摩擦声<br>呼吸声（近）</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">3s</td></tr>
+<tr><td style="padding:10px 14px;border:1px solid #E5E6EB;">1-4</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">中近景<br>摇</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">镜头上摇揭示人物：林深，25岁，消瘦，眼窝深陷。他穿着破旧的防风外套，跪在废墟中间。他看着手里的金属盒子，嘴唇微微发抖。</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">BGM渐入<br>（低沉弦乐）</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">4s</td></tr>
+<tr><td style="padding:10px 14px;border:1px solid #E5E6EB;">1-5</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">特写<br>固定</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">金属盒子被打开。里面是一张褪色的合照和一把钥匙。照片上三个人在一棵大树前微笑——但其中一个人的脸被人为地划掉了。</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">盒子开启声<br>弦乐渐强</td><td style="padding:10px 14px;border:1px solid #E5E6EB;">3s</td></tr>
+</table>
+<p class="no-indent" style="font-size:13px;color:#86909C;">导演备注：开场整体色调偏冷灰，对比度降低。林深出现后画面暖度微升。合照特写时使用浅景深，让被划掉的脸部格外刺眼。</p>`,
+
+  interpret: `<h2 class="chapter-title">引言：魔幻现实的入口</h2>
+<p>"多年以后，面对行刑队，奥雷里亚诺·布恩迪亚上校将会回想起父亲带他去见识冰块的那个遥远的下午。"</p>
+<p>加西亚·马尔克斯用一句话完成了三件事：他折叠了时间（多年以后），建立了死亡的阴影（行刑队），又在下一个呼吸间把读者拉回了童年的惊奇（见识冰块）。这不是一个普通的开头——这是一把钥匙，打开的是一扇通向循环时间的门。</p>
+<p>本文将从三个维度解读《百年孤独》的核心命题：时间的循环结构、家族宿命的隐喻机制、以及"孤独"作为存在状态的七种呈现方式。</p>
+<h3 style="font-size:17px;font-weight:600;margin:28px 0 16px;border:none;">一、为什么是"百年"？——时间作为叙事装置</h3>
+<p>马尔克斯没有按照线性时间讲述布恩迪亚家族的故事。他采用的是一种"螺旋时间"结构——事件不断重复，但每次重复都在一个更高（或更低）的层面上展开。</p>
+<p>这种结构最直观的体现是<strong>名字的重复</strong>。七代人中反复出现"奥雷里亚诺"和"何塞·阿尔卡蒂奥"这两个名字，而同名者往往继承了先辈的某种特质或宿命：</p>
+<p>奥雷里亚诺们倾向于内省、孤僻、拥有某种超自然的感知力；何塞·阿尔卡蒂奥们则鲁莽、外向、被肉欲驱动。名字即命运——这是马尔克斯设下的第一重隐喻。</p>
+<p>但"重复"并不意味着"相同"。每一代的重复都伴随着<strong>熵的增加</strong>——家族的活力在衰减，马孔多的辉煌在褪色，记忆在流失。这正是"百年"的含义：不是一百年的历史，而是一个完整的衰变周期。</p>`,
+
+  general: `<h2 class="chapter-title">第一章 新章节</h2>
+<p style="color:#C9CDD4;">在这里开始你的创作...</p>`
+};
+
 const MOCK_CHAPTERS = {
   1: {
     title: '第一章 启入星域',
@@ -206,24 +349,42 @@ function selectChapter(chNum, el) {
   // Switch to editor view
   switchPanel('editor', null);
 
-  // Load chapter content
-  const ch = MOCK_CHAPTERS[chNum];
-  if (ch && ch.content) {
-    document.getElementById('editorContent').innerHTML = ch.content;
-  }
-  document.getElementById('chapterWordCount').textContent = ch ? ch.words.toLocaleString() : '0';
+  // Try scene-specific chapter data first, then fallback to novel MOCK_CHAPTERS
+  const sceneChapters = SCENE_CHAPTERS[currentScene];
+  const chData = sceneChapters && sceneChapters.list[chNum - 1];
+  const novelCh = MOCK_CHAPTERS[chNum];
 
-  // Auto save simulation
+  if (currentScene === 'novel' && novelCh && novelCh.content) {
+    document.getElementById('editorContent').innerHTML = novelCh.content;
+  } else if (chNum === 1 && SCENE_EDITOR_CONTENT[currentScene]) {
+    document.getElementById('editorContent').innerHTML = SCENE_EDITOR_CONTENT[currentScene];
+  } else if (chData) {
+    // Generate placeholder content for non-first chapters
+    document.getElementById('editorContent').innerHTML =
+      `<h2 class="chapter-title">${chData.title}</h2><p style="color:#C9CDD4;">此章节内容待创作...</p>`;
+  }
+
+  const words = chData ? chData.words : (novelCh ? novelCh.words : 0);
+  document.getElementById('chapterWordCount').textContent = words.toLocaleString();
+
   simulateSave();
 }
 
 function addChapter() {
+  const config = SCENE_CONFIG[currentScene] || SCENE_CONFIG.novel;
   const list = document.getElementById('chapterList');
   const count = list.children.length + 1;
   const item = document.createElement('div');
   item.className = 'chapter-item';
   item.dataset.ch = count;
-  item.innerHTML = `<span>第${numberToChinese(count)}章 新章节</span><span class="ch-words">0</span>`;
+  const label = currentScene === 'storyboard'
+    ? `S${String(count).padStart(2,'0')} 新场次`
+    : `第${numberToChinese(count)}${config.chapterLabel} 新${config.chapterLabel === '幕' ? '幕' : config.chapterLabel === '场' ? '场' : config.chapterLabel === '节' ? '节' : '章节'}`;
+  item.innerHTML = `<span>${label}</span><span class="ch-words">0</span>`;
+  item.onclick = function() { selectChapter(count, item); };
+  list.appendChild(item);
+  showToast(`已添加新${config.chapterLabel}`);
+}
   item.onclick = function() { selectChapter(count, item); };
   list.appendChild(item);
   showToast('已添加新章节');
@@ -531,7 +692,7 @@ function aiContinue() {
   setTimeout(() => {
     const editor = document.getElementById('editorContent');
     const p = document.createElement('p');
-    p.style.color = '#1a6dff';
+    p.style.color = '#0052D9';
     p.innerHTML = '黎明号在暗物质的洪流中颠簸前行，每一次震颤都在提醒着所有人——他们正在接近某种不应被接近的东西。陈昕的目光穿过全息投影的幽蓝光幕，看到了数据流中一个反常的波动——那不是暗物质的特征，而是某种有序的信号。有规律、有节奏，像是一颗古老的心脏在虚空中跳动。';
     editor.appendChild(p);
     editor.scrollTop = editor.scrollHeight;
@@ -583,9 +744,9 @@ function toggleFav() {
 // ==========================================
 function simulateSave() {
   const status = document.getElementById('saveStatus');
-  status.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> 保存中…';
+  status.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF7D00" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> 保存中…';
   setTimeout(() => {
-    status.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#43e97b" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 已保存到云端';
+    status.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00B42A" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 已保存到云端';
   }, 1200);
 }
 
@@ -610,3 +771,57 @@ function showToast(msg) {
 // INIT
 // ==========================================
 updatePanelPositions();
+initScene();
+
+function initScene() {
+  const config = SCENE_CONFIG[currentScene] || SCENE_CONFIG.novel;
+  const chapters = SCENE_CHAPTERS[currentScene] || SCENE_CHAPTERS.novel;
+
+  // Title
+  document.getElementById('docTitle').value = config.title;
+
+  // Total words
+  document.getElementById('totalWordCount').textContent = config.totalWords;
+
+  // Chapter word count (first chapter)
+  if (chapters.list[0]) {
+    document.getElementById('chapterWordCount').textContent = chapters.list[0].words.toLocaleString();
+  }
+
+  // Chat welcome
+  const chatBody = document.getElementById('chatBody');
+  const firstMsg = chatBody.querySelector('.chat-msg.system');
+  if (firstMsg) firstMsg.textContent = config.chatWelcome;
+
+  // Left panel setting labels
+  const subItems = document.querySelectorAll('.panel-sub-item');
+  config.settingLabels.forEach((label, i) => {
+    if (subItems[i]) {
+      const svg = subItems[i].querySelector('svg');
+      subItems[i].textContent = '';
+      if (svg) subItems[i].appendChild(svg);
+      subItems[i].appendChild(document.createTextNode(' ' + label));
+    }
+  });
+
+  // Chapter list
+  const chapterList = document.getElementById('chapterList');
+  chapterList.innerHTML = '';
+  chapters.list.forEach((ch, idx) => {
+    const item = document.createElement('div');
+    item.className = 'chapter-item' + (idx === 0 ? ' active' : '');
+    item.dataset.ch = idx + 1;
+    item.innerHTML = `<span>${ch.title}</span><span class="ch-words">${ch.words.toLocaleString()}</span>`;
+    item.onclick = function() { selectChapter(idx + 1, item); };
+    chapterList.appendChild(item);
+  });
+
+  // Editor content (if not novel which is already in HTML)
+  const editorContent = SCENE_EDITOR_CONTENT[currentScene];
+  if (editorContent) {
+    document.getElementById('editorContent').innerHTML = editorContent;
+  }
+
+  // Page title
+  document.title = config.name + ' - ' + config.title;
+}
