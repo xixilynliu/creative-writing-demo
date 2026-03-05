@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>创意写作 - 沉浸式工作台</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="workstation">
+  <!-- ========== TOP BAR ========== -->
+  <header class="ws-topbar">
+    <div class="ws-topbar-left">
+      <button class="ws-back-btn" onclick="goBack()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        退出
+      </button>
+      <input class="ws-title" id="docTitle" value="星际迷航：暗影纪元" />
+      <span class="ws-save-status" id="saveStatus">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        已保存到云端
+      </span>
+      <span class="ws-word-count">本章 <strong id="chapterWordCount">2,847</strong> 字 / 总计 <strong id="totalWordCount">18,234</strong> 字</span>
+    </div>
+    <div class="ws-topbar-right">
+      <button class="btn-outline" onclick="forceSave()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        保存
+      </button>
+      <button class="btn-outline" onclick="showExportMenu()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        导出
+      </button>
+      <button class="btn-icon" id="favBtn" onclick="toggleFav()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========== BODY (3 columns) ========== -->
+  <div class="ws-body">
+    <!-- LEFT PANEL -->
+    <div class="ws-left" id="leftPanel">
+      <div class="ws-left-header">
+        <h3>作品设置</h3>
+        <button class="collapse-btn" onclick="toggleLeft()" title="收起左栏">&laquo;</button>
+      </div>
+
+      <!-- 作品设置分组 -->
+      <div class="panel-section">
+        <div class="panel-section-header expanded" onclick="toggleSection(this)">
+          <h4>作品设置</h4>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="panel-section-body">
+          <div class="panel-sub-item active" data-panel="settings" onclick="switchPanel('settings', this)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            设定
+          </div>
+          <div class="panel-sub-item" data-panel="tags" onclick="switchPanel('tags', this)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            标签
+          </div>
+          <div class="panel-sub-item" data-panel="characters" onclick="switchPanel('characters', this)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            角色
+          </div>
+        </div>
+      </div>
+
+      <!-- 内容大纲 -->
+      <div class="panel-section">
+        <div class="panel-section-header" onclick="switchPanel('outline', null); this.classList.add('expanded')">
+          <h4>内容大纲</h4>
+        </div>
+      </div>
+
+      <!-- 章节信息 -->
+      <div class="panel-section" style="border-bottom:none;">
+        <div class="panel-section-header expanded" style="cursor:default;">
+          <h4>章节信息</h4>
+          <div style="display:flex;gap:6px;">
+            <button class="collapse-btn" onclick="addChapter()" title="新增章节">+</button>
+          </div>
+        </div>
+        <div class="chapter-list" id="chapterList">
+          <div class="chapter-item active" data-ch="1" onclick="selectChapter(1, this)">
+            <span>第一章 启入星域</span>
+            <span class="ch-words">2,847</span>
+          </div>
+          <div class="chapter-item" data-ch="2" onclick="selectChapter(2, this)">
+            <span>第二章 暗影之门</span>
+            <span class="ch-words">3,120</span>
+          </div>
+          <div class="chapter-item" data-ch="3" onclick="selectChapter(3, this)">
+            <span>第三章 虚空回响</span>
+            <span class="ch-words">4,567</span>
+          </div>
+          <div class="chapter-item" data-ch="4" onclick="selectChapter(4, this)">
+            <span>第四章 星际追逐</span>
+            <span class="ch-words">3,890</span>
+          </div>
+          <div class="chapter-item" data-ch="5" onclick="selectChapter(5, this)">
+            <span>第五章 最后防线</span>
+            <span class="ch-words">3,810</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEFT PANEL TOGGLE -->
+    <button class="panel-toggle left" id="leftToggle" style="display:none;" onclick="toggleLeft()">&#9654;</button>
+
+    <!-- ========== CENTER (Editor) ========== -->
+    <div class="ws-center" id="centerPanel">
+      <!-- Editor Toolbar -->
+      <div class="editor-toolbar" id="editorToolbar">
+        <button class="toolbar-btn" title="撤销" onclick="document.execCommand('undo')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1014.85-10.36L1 10"/></svg>
+        </button>
+        <button class="toolbar-btn" title="重做" onclick="document.execCommand('redo')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 01-14.85-10.36L23 10"/></svg>
+        </button>
+        <span class="toolbar-divider"></span>
+        <button class="toolbar-btn" title="标题" onclick="document.execCommand('formatBlock', false, 'H2')">H</button>
+        <button class="toolbar-btn" title="加粗" onclick="document.execCommand('bold')"><strong>B</strong></button>
+        <button class="toolbar-btn" title="斜体" onclick="document.execCommand('italic')"><em>I</em></button>
+        <button class="toolbar-btn" title="下划线" onclick="document.execCommand('underline')"><u>U</u></button>
+        <button class="toolbar-btn" title="删除线" onclick="document.execCommand('strikeThrough')"><s>S</s></button>
+        <span class="toolbar-divider"></span>
+        <button class="toolbar-btn" title="无序列表" onclick="document.execCommand('insertUnorderedList')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1" fill="currentColor"/><circle cx="3" cy="12" r="1" fill="currentColor"/><circle cx="3" cy="18" r="1" fill="currentColor"/></svg>
+        </button>
+        <button class="toolbar-btn" title="引用" onclick="document.execCommand('formatBlock', false, 'BLOCKQUOTE')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"/></svg>
+        </button>
+        <span class="toolbar-divider"></span>
+        <!-- AI Quick Actions -->
+        <button class="toolbar-ai-btn" onclick="aiContinue()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          正文续写
+        </button>
+        <button class="toolbar-ai-btn" onclick="aiPolish()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/><path d="M18 6l-6 6-6-6"/></svg>
+          内容润色
+        </button>
+      </div>
+
+      <!-- Editor Content -->
+      <div class="editor-content" id="editorContent" contenteditable="true">
+        <h2 class="chapter-title">第一章 启入星域</h2>
+        <p>星历2847年，人类文明已经扩展到了猎户臂的最远端。在距离地球一万两千光年的星域边缘，"黎明号"星舰正以亚光速穿越一片前所未有的暗物质区域。</p>
+        <p>舰桥上弥漫着低沉的嗡鸣，那是引擎在暗物质海洋中挣扎的声音。指挥官陈昕站在全息投影台前，她的目光穿过半透明的星图，盯着远方那片被标注为"禁区"的暗红色区域。汗水沿着她的鬓角滑落，滴在制服的衣领上，留下一圈深色的水渍。</p>
+        <p>"距离目标坐标还有四个标准时。"导航官林越的声音从身后传来，带着一丝不易察觉的紧张，他的手指在控制台上无意识地敲击着，指节泛白。"但暗物质密度持续上升，护盾能耗已经超过预计值的百分之六十。"</p>
+        <p>陈昕没有回头。她伸手在星图上放大了那片禁区的边缘——一条锯齿状的能量波动线正在缓缓扩散，像某种巨大生物的呼吸。空气中弥漫着一股臭氧的味道，那是等离子护盾过载的征兆。</p>
+        <p>"舰长，"通讯官赵鸣突然站起身，耳机紧贴着太阳穴，脸色发白，"我收到了一组信号。来自禁区内部。"</p>
+        <p>整个舰桥瞬间安静了。只剩下引擎低沉的轰鸣和金属外壳在暗物质压力下发出的细碎呻吟。陈昕转过身，视线锋利如刀，扫过赵鸣因恐惧而微微颤抖的嘴唇。</p>
+        <p>"什么信号？"</p>
+        <p>"标准人类通讯协议。加密等级……Omega-7。"赵鸣吞了口唾沫，嘴唇翕动，声音几乎被压成了耳语，"舰长，Omega-7是——"</p>
+        <p>"我知道那是什么。"陈昕的声音骤然低沉下来，仿佛胸腔里压着一块铁。Omega-7，联邦最高级别的加密协议，意味着发出这组信号的人——或者曾经是人的东西——拥有联邦最高权限。</p>
+        <p>她深吸一口气，空气在齿缝间发出嘶嘶的声响，像是被灼烫的金属淬入冷水。指尖搭上操作台时，冰凉的触感从指腹传导到手腕，顺着血管攀升至肩膀。</p>
+        <p>"全舰进入一级战备状态。"陈昕的命令在舰桥中回荡，清晰而冷冽，"导航，重新计算航线。目标——禁区中心。"</p>
+        <p>林越猛地转过头来，瞳孔骤缩："舰长？！那里——"</p>
+        <p>"执行命令。"</p>
+        <p>没有人再开口。红色警戒灯在舰桥内旋转亮起，将每个人的脸映成了明暗交替的赤红。陈昕走回指挥位，在坐下的瞬间，右手不自觉地摸了摸胸口那枚旧式军牌——那是父亲留下的唯一遗物，金属边缘已经被她的指腹磨得失去了棱角。</p>
+        <p>"你在那里等着我。"她无声地说，目光穿透了舰桥的穹顶，穿透了暗物质的迷雾，仿佛看到了十二年前那艘消失在禁区中的联邦旗舰——"永恒号"。</p>
+        <p>父亲的舰。</p>
+        <p>引擎的嗡鸣骤然拔高了一个调，黎明号的船头缓缓偏转，对准了那片吞噬过整支舰队的虚空。金属舱壁传来细密的震颤，像是有无数只看不见的手在叩击船体，又像是来自深渊的某种低语——在人类听觉的极限之下，似有似无地重复着什么。</p>
+        <p>陈昕闭上眼睛，在黑暗中，她似乎看见了什么——一束光，微弱而顽固，在无尽的暗影中跳动。</p>
+      </div>
+
+      <!-- Floating Selection Toolbar -->
+      <div class="float-toolbar" id="floatToolbar">
+        <button class="float-tb-btn ai-adjust" id="aiAdjustBtn" onclick="showAiAdjustMenu()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          AI 调整
+        </button>
+        <button class="float-tb-btn" onclick="document.execCommand('copy')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          复制
+        </button>
+        <button class="float-tb-btn" onclick="document.execCommand('bold')"><strong>B</strong></button>
+        <button class="float-tb-btn" onclick="document.execCommand('italic')"><em>I</em></button>
+        <button class="float-tb-btn" onclick="document.execCommand('underline')"><u>U</u></button>
+      </div>
+
+      <!-- AI Adjust Dropdown -->
+      <div class="ai-adjust-dropdown" id="aiAdjustDropdown">
+        <div class="ai-adjust-item" onclick="executeAiAction('rewrite')">改写</div>
+        <div class="ai-adjust-item" onclick="executeAiAction('polish')">润色</div>
+        <div class="ai-adjust-item" onclick="executeAiAction('expand')">扩写</div>
+        <div class="ai-adjust-item" onclick="executeAiAction('condense')">缩写</div>
+        <div class="ai-adjust-item atmosphere" onclick="executeAtmosphere()">氛围增强</div>
+      </div>
+
+      <!-- AI Dialog (Atmosphere Enhancement etc) -->
+      <div class="ai-dialog" id="aiDialog">
+        <div class="ai-dialog-header">
+          <span id="aiDialogTitle">氛围增强</span>
+          <button class="insp-popup-close" onclick="closeAiDialog()">&times;</button>
+        </div>
+        <div class="ai-dialog-body" id="aiDialogBody">
+          <!-- populated dynamically -->
+        </div>
+        <div class="ai-dialog-actions" id="aiDialogActions" style="display:none;">
+          <button onclick="replaceSelection()">替换原文</button>
+          <button onclick="copyResult()">复制</button>
+          <button onclick="regenerate()">换一换</button>
+        </div>
+      </div>
+
+      <!-- Bottom Floating Bar -->
+      <div class="ws-bottom-bar" id="bottomBar">
+        <div class="bottom-bar-btn" id="tipsBtn" onmouseenter="showTipsMenu()" onmouseleave="startTipsHideTimer()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+          卡文锦囊
+          <!-- Tips menu -->
+          <div class="tips-menu" id="tipsMenu" onmouseenter="clearTipsHideTimer()" onmouseleave="hideTipsMenu()">
+            <div class="tips-menu-item" onclick="showInspirationCard('plot')">思路卡了？</div>
+            <div class="tips-menu-item" onclick="showInspirationCard('setting')">设定卡了？</div>
+            <div class="tips-menu-item" onclick="showInspirationCard('detail')">细节卡了？</div>
+          </div>
+        </div>
+        <div class="bottom-bar-btn" onclick="showRightPanelTool('rhythm')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          节奏诊断
+        </div>
+        <div class="bottom-bar-btn" onclick="showRightPanelTool('consistency')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          一致性校对
+        </div>
+      </div>
+
+      <!-- Inspiration Popup -->
+      <div class="inspiration-popup" id="inspirationPopup">
+        <div class="insp-popup-header">
+          <h4>灵感续接</h4>
+          <button class="insp-popup-close" onclick="closeInspirationPopup()">&times;</button>
+        </div>
+        <div class="insp-popup-body" id="inspirationBody">
+          <!-- populated dynamically -->
+        </div>
+        <div class="insp-popup-footer">
+          <button class="btn-refresh" onclick="refreshInspiration()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 01-14.85-10.36L23 10"/></svg>
+            换一换
+          </button>
+          <button class="btn-generate" onclick="generateNextChapter()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            生成下一章
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL TOGGLE -->
+    <button class="panel-toggle right" id="rightToggle" style="display:none;" onclick="toggleRight()">&#9664;</button>
+
+    <!-- ========== RIGHT PANEL ========== -->
+    <div class="ws-right" id="rightPanel">
+      <!-- Inspiration Cards -->
+      <div class="inspiration-area" id="inspirationArea">
+        <div class="insp-header">
+          <h3>灵感卡片</h3>
+          <button class="insp-collapse-btn" onclick="toggleInspirationArea()">&#9660;</button>
+        </div>
+        <div class="insp-cards" id="inspCards">
+          <div class="insp-card" onclick="runInspTool('tips')">
+            <div class="insp-card-icon ic-tips">&#128161;</div>
+            <div>
+              <h4>卡文锦囊</h4>
+              <p>三个后续创作思路</p>
+            </div>
+          </div>
+          <div class="insp-card" onclick="runInspTool('rhythm')">
+            <div class="insp-card-icon ic-rhythm">&#127926;</div>
+            <div>
+              <h4>节奏诊断</h4>
+              <p>章节节奏分析+改写建议</p>
+            </div>
+          </div>
+          <div class="insp-card" onclick="runInspTool('check')">
+            <div class="insp-card-icon ic-check">&#9989;</div>
+            <div>
+              <h4>一致性校对</h4>
+              <p>人物/时间线/称谓检查</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Chat -->
+      <div class="ai-chat-area">
+        <div class="ai-chat-header">
+          <h3>AI 对话</h3>
+          <div class="ai-chat-header-actions">
+            <button class="btn-icon" title="历史记录">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </button>
+            <button class="btn-icon" onclick="toggleRight()" title="收起">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="ai-chat-body" id="chatBody">
+          <div class="chat-msg system">
+            你好！我是你的创作助手。我已经了解了你的小说设定和角色信息，可以随时帮你推进剧情、优化文字、或解答创作中的疑问。
+          </div>
+          <div class="chat-msg user">帮我想一下第二章的主线冲突应该怎么设计？</div>
+          <div class="chat-msg ai">
+            基于第一章的结尾，陈昕决定进入禁区，第二章的主线冲突可以围绕以下核心设计：<br><br>
+            <strong>核心冲突：信任危机</strong><br>
+            进入禁区后，Omega-7 信号突然消失。船员开始质疑舰长的决定——特别是林越，他可能会发现禁区的暗物质数据与12年前"永恒号"失踪时的记录高度吻合，从而揭露陈昕的私人动机（寻父），引发指挥权的信任危机。<br><br>
+            <strong>次线伏笔：</strong>赵鸣在分析信号残留时发现一个异常——信号的时间戳显示它发出于<em>三天后</em>。
+          </div>
+        </div>
+        <div class="ai-chat-input-area">
+          <button class="ai-attach-btn" title="添加附件">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+          </button>
+          <textarea class="ai-chat-input" id="chatInput" placeholder="输入你的问题..." rows="1" onkeydown="handleChatKey(event)"></textarea>
+          <button class="ai-chat-send" onclick="sendChat()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS PANELS (overlays in center area, toggled by left panel) -->
+<!-- These are hidden by default and shown when user clicks settings/tags/characters -->
+<div class="settings-panel" id="panelSettings" style="display:none; position:fixed; top:52px; left:260px; right:320px; bottom:0; background:#fff; z-index:40; overflow-y:auto;">
+  <h2>设定</h2>
+  <div class="setting-row">
+    <div class="setting-label">背景设定</div>
+    <div class="setting-value"><textarea>星历2847年，人类文明扩展到猎户臂最远端。联邦政府统治着横跨千光年的星域，但在星域边缘存在着被称为"禁区"的神秘暗物质区域。12年前，联邦旗舰"永恒号"在执行探索任务时失踪于此。</textarea></div>
+    <div class="setting-actions">
+      <button class="setting-btn-gen" onclick="showToast('正在生成设定...')">生成设定</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-label">世界观规则</div>
+    <div class="setting-value"><textarea>1. 超光速航行依赖"跃迁引擎"，但禁区内跃迁引擎无法工作
+2. 暗物质会干扰通讯和导航系统
+3. Omega协议分为7级，Omega-7为联邦元首级别
+4. 禁区中存在异常时空扭曲现象</textarea></div>
+    <div class="setting-actions">
+      <button class="setting-btn-gen" onclick="showToast('正在生成设定...')">生成设定</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-label">叙事视角</div>
+    <div class="setting-value"><textarea>第三人称有限视角，以陈昕为主要视角人物，偶尔切换至林越视角呈现不同立场。</textarea></div>
+    <div class="setting-actions">
+      <button class="setting-btn-gen" onclick="showToast('正在生成设定...')">生成设定</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-label">红线</div>
+    <div class="setting-value"><textarea>1. 不出现现实政治隐喻
+2. 暴力描写控制在PG-13以内
+3. 不出现歧视性内容</textarea></div>
+    <div class="setting-actions">
+      <button class="setting-btn-gen" onclick="showToast('正在生成设定...')">生成设定</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-label">关键线索</div>
+    <div class="setting-value"><textarea>1. 陈昕父亲的旧式军牌（金属边缘磨损）
+2. Omega-7加密信号（来自禁区内部）
+3. 时间戳异常（信号来自"未来"）
+4. 暗物质密度异常上升</textarea></div>
+    <div class="setting-actions">
+      <button class="setting-btn-gen" onclick="showToast('正在生成设定...')">生成设定</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-label">核心冲突</div>
+    <div class="setting-value"><textarea>个人动机（寻父）vs 职责（船员安全）：陈昕借公务之名进入禁区实为寻找失踪的父亲和"永恒号"，但这个决定将全舰150名船员置于未知危险中。</textarea></div>
+    <div class="setting-actions">
+      <button class="setting-btn-gen" onclick="showToast('正在生成设定...')">生成设定</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-label">语言风格</div>
+    <div class="setting-value"><textarea>硬科幻基调，冷峻克制。多用短句推进紧张感，环境描写侧重感官细节（光影、声音、触感），对白简洁有力。避免大段独白和解释性文字。</textarea></div>
+    <div class="setting-actions">
+      <button class="setting-btn-gen" onclick="showToast('正在生成设定...')">生成设定</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-label">参考文件</div>
+    <div class="setting-value" style="display:flex;gap:8px;align-items:center;padding-top:8px;">
+      <button class="btn-outline" onclick="showToast('文件上传功能（演示）')">+ 上传文件</button>
+      <span style="font-size:12px;color:#1a6dff;cursor:pointer;" onclick="showToast('打开预览')">参考设定_v2.pdf</span>
+    </div>
+  </div>
+  <div style="padding:20px 0;text-align:right;">
+    <button class="btn-primary" onclick="switchPanel('editor', null)">返回编辑器</button>
+  </div>
+</div>
+
+<div class="settings-panel" id="panelTags" style="display:none; position:fixed; top:52px; left:260px; right:320px; bottom:0; background:#fff; z-index:40; overflow-y:auto; padding:40px 60px;">
+  <h2>标签</h2>
+  <div class="tags-group">
+    <h4>题材</h4>
+    <div class="tags-chips">
+      <span class="tag-chip selected" onclick="this.classList.toggle('selected')">科幻</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">玄幻</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">言情</span>
+      <span class="tag-chip selected" onclick="this.classList.toggle('selected')">悬疑</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">恐怖</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">武侠</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">都市</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">历史</span>
+    </div>
+  </div>
+  <div class="tags-group">
+    <h4>情节</h4>
+    <div class="tags-chips">
+      <span class="tag-chip selected" onclick="this.classList.toggle('selected')">星际探索</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">阴谋权斗</span>
+      <span class="tag-chip selected" onclick="this.classList.toggle('selected')">亲情救赎</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">末日求生</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">智斗推理</span>
+      <span class="tag-chip selected" onclick="this.classList.toggle('selected')">团队冒险</span>
+    </div>
+  </div>
+  <div class="tags-group">
+    <h4>情绪</h4>
+    <div class="tags-chips">
+      <span class="tag-chip selected" onclick="this.classList.toggle('selected')">紧张</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">温暖</span>
+      <span class="tag-chip selected" onclick="this.classList.toggle('selected')">压抑</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">热血</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">悲伤</span>
+      <span class="tag-chip selected" onclick="this.classList.toggle('selected')">神秘</span>
+    </div>
+  </div>
+  <div class="tags-group">
+    <h4>时空</h4>
+    <div class="tags-chips">
+      <span class="tag-chip selected" onclick="this.classList.toggle('selected')">远未来</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">近未来</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">当代</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">古代</span>
+      <span class="tag-chip selected" onclick="this.classList.toggle('selected')">太空</span>
+      <span class="tag-chip" onclick="this.classList.toggle('selected')">异世界</span>
+    </div>
+  </div>
+  <div style="padding:20px 0;text-align:right;">
+    <button class="btn-primary" onclick="switchPanel('editor', null)">返回编辑器</button>
+  </div>
+</div>
+
+<div class="settings-panel" id="panelCharacters" style="display:none; position:fixed; top:52px; left:260px; right:320px; bottom:0; background:#fff; z-index:40; overflow-y:auto; padding:40px 60px;">
+  <h2>角色</h2>
+  <div style="display:flex;gap:12px;margin-bottom:20px;">
+    <button class="btn-outline" style="font-weight:600;">角色列表</button>
+    <button class="btn-outline">人物关系</button>
+  </div>
+  <h3 style="font-size:14px;color:#888;margin-bottom:12px;">主要角色</h3>
+  <div class="char-cards">
+    <div class="char-card">
+      <div class="char-card-header">
+        <div class="char-avatar" style="background:linear-gradient(135deg,#667eea,#764ba2);">陈</div>
+        <div><h4>陈昕</h4><span class="char-role">主角 / "黎明号"舰长</span></div>
+      </div>
+      <div class="char-field"><span class="char-field-label">身份</span><span class="char-field-value">联邦星舰"黎明号"指挥官，军阶上校</span></div>
+      <div class="char-field"><span class="char-field-label">动机</span><span class="char-field-value">以执行探索任务为名，实际目标是进入禁区寻找12年前失踪的父亲和"永恒号"旗舰</span></div>
+      <div class="char-field"><span class="char-field-label">性格</span><span class="char-field-value">冷静果断，内心背负沉重情感，表面克制实则执着</span></div>
+      <div class="char-field"><span class="char-field-label">外貌特征</span><span class="char-field-value">短发，身形挺拔，目光锐利如刀，胸口常佩旧式军牌</span></div>
+      <div class="char-field"><span class="char-field-label">与主角关系</span><span class="char-field-value">-</span></div>
+    </div>
+    <div class="char-card">
+      <div class="char-card-header">
+        <div class="char-avatar" style="background:linear-gradient(135deg,#4facfe,#00f2fe);">林</div>
+        <div><h4>林越</h4><span class="char-role">导航官</span></div>
+      </div>
+      <div class="char-field"><span class="char-field-label">身份</span><span class="char-field-value">"黎明号"首席导航官，军阶少校</span></div>
+      <div class="char-field"><span class="char-field-label">动机</span><span class="char-field-value">确保船员安全返航，对舰长进入禁区的决定持保留态度</span></div>
+      <div class="char-field"><span class="char-field-label">性格</span><span class="char-field-value">谨慎理性，善于数据分析，面对未知时倾向保守</span></div>
+      <div class="char-field"><span class="char-field-label">外貌特征</span><span class="char-field-value">紧张时手指会无意识敲击控制台，指节泛白</span></div>
+      <div class="char-field"><span class="char-field-label">与主角关系</span><span class="char-field-value">下属/潜在对立者，可能发现陈昕的私人动机</span></div>
+    </div>
+  </div>
+  <h3 style="font-size:14px;color:#888;margin:20px 0 12px;">次要角色</h3>
+  <div class="char-cards">
+    <div class="char-card">
+      <div class="char-card-header">
+        <div class="char-avatar" style="background:linear-gradient(135deg,#43e97b,#38f9d7);">赵</div>
+        <div><h4>赵鸣</h4><span class="char-role">通讯官</span></div>
+      </div>
+      <div class="char-field"><span class="char-field-label">身份</span><span class="char-field-value">"黎明号"通讯官</span></div>
+      <div class="char-field"><span class="char-field-label">动机</span><span class="char-field-value">执行职责，对禁区信号充满恐惧但同时好奇</span></div>
+      <div class="char-field"><span class="char-field-label">性格</span><span class="char-field-value">敏感谨小慎微，但在关键时刻有不寻常的勇气</span></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;margin:20px 0;padding:20px 0;border-top:1px solid #eee;">
+    <button class="btn-outline" onclick="showToast('添加角色卡片')">+ 添加角色</button>
+    <button class="btn-outline" style="color:#1a6dff;border-color:#1a6dff;" onclick="showToast('AI生成角色设定...')">生成角色</button>
+    <button class="btn-primary" onclick="switchPanel('editor', null)" style="margin-left:auto;">返回编辑器</button>
+  </div>
+</div>
+
+<!-- Outline Panel -->
+<div class="settings-panel" id="panelOutline" style="display:none; position:fixed; top:52px; left:260px; right:320px; bottom:0; background:#fff; z-index:40; overflow-y:auto; padding:40px 60px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+    <h2 style="margin:0;border:none;padding:0;">内容大纲</h2>
+    <button class="btn-primary" onclick="showToast('正在生成总纲...')">生成总纲</button>
+  </div>
+  <div contenteditable="true" style="min-height:400px;font-size:14px;line-height:2;outline:none;">
+    <p><strong>第一章 启入星域</strong></p>
+    <p>- "黎明号"穿越暗物质区域，引擎过载<br>- 通讯官赵鸣收到来自禁区内部的Omega-7加密信号<br>- 陈昕下令改变航向，驶入禁区</p>
+    <p><strong>第二章 暗影之门</strong></p>
+    <p>- 进入禁区后信号消失，林越发现暗物质数据与"永恒号"失踪时吻合<br>- 林越质疑舰长的真实动机，信任危机初现<br>- 赵鸣发现信号时间戳异常——来自三天后</p>
+    <p><strong>第三章 虚空回响</strong></p>
+    <p>- 黎明号探测到一片残骸场，部分碎片属于"永恒号"<br>- 陈昕独自进入残骸中心，发现父亲的指挥日志<br>- 日志揭露禁区内存在"回响"现象：时间非线性流动</p>
+    <p><strong>第四章 星际追逐</strong></p>
+    <p>- 未知力量出现，开始追踪黎明号<br>- 林越试图夺取指挥权但失败<br>- 陈昕利用"回响"现象进行时间跳跃，甩掉追踪</p>
+    <p><strong>第五章 最后防线</strong></p>
+    <p>- 到达禁区中心：一个巨大的时空节点<br>- 陈昕发现"永恒号"被困在时间循环中<br>- 最终选择：牺牲黎明号的跃迁核心打破循环<br>- 父亲的影像出现，真相揭露<br>- 开放式结尾：黎明号开始缓慢回航</p>
+  </div>
+  <div style="padding:20px 0;text-align:right;">
+    <button class="btn-primary" onclick="switchPanel('editor', null)">返回编辑器</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="workstation.js"></script>
+</body>
+</html>

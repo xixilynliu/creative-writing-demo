@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>创意写作沉浸式工作台</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- 侧边导航 -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#0052D9"/><text x="14" y="19" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">文</text></svg>
+    <span class="sidebar-title">文心一言</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#" class="nav-item active">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      创意写作
+    </a>
+    <a href="#" class="nav-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      AI对话
+    </a>
+    <a href="#" class="nav-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      云盘
+    </a>
+  </nav>
+</aside>
+
+<!-- 主内容区 -->
+<main class="main-content">
+  <!-- 场景选择卡片区 -->
+  <section class="scene-section">
+    <div class="section-header">
+      <h2>选择创作场景</h2>
+      <div class="scene-nav">
+        <button class="scene-nav-btn prev" id="scenePrev" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="scene-nav-btn next" id="sceneNext">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="scene-cards-wrapper">
+      <div class="scene-cards" id="sceneCards">
+        <!-- 小说创作 -->
+        <div class="scene-card" data-scene="novel" onclick="enterWorkstation('novel')">
+          <div class="scene-card-icon novel">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </div>
+          <h3>小说创作</h3>
+          <p>分章节逐章生成，角色设定与世界观管理，一致性校对</p>
+          <span class="scene-tag">热门</span>
+        </div>
+        <!-- 剧本生成 -->
+        <div class="scene-card" data-scene="script" onclick="enterWorkstation('script')">
+          <div class="scene-card-icon script">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg>
+          </div>
+          <h3>剧本生成</h3>
+          <p>专业剧本格式输出，场景/对白/舞台指示自动排版</p>
+          <span class="scene-tag">推荐</span>
+        </div>
+        <!-- 分镜脚本 -->
+        <div class="scene-card" data-scene="storyboard" onclick="enterWorkstation('storyboard')">
+          <div class="scene-card-icon storyboard">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          </div>
+          <h3>分镜脚本</h3>
+          <p>镜头语言描述，画面构图指引，拍摄参数建议</p>
+        </div>
+        <!-- 内容解读 -->
+        <div class="scene-card" data-scene="interpret" onclick="enterWorkstation('interpret')">
+          <div class="scene-card-icon interpret">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="11" y1="8" x2="11" y2="14"/></svg>
+          </div>
+          <h3>内容解读</h3>
+          <p>书籍/影视/文章深度解读，知识密度内容生成</p>
+        </div>
+        <!-- 通用写作 -->
+        <div class="scene-card" data-scene="general" onclick="enterWorkstation('general')">
+          <div class="scene-card-icon general">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <h3>通用写作</h3>
+          <p>自由创作模式，支持各类文体风格的通用写作</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 中间行：创作情况 + 近期作品 -->
+  <section class="middle-section">
+    <!-- 创作情况卡片 -->
+    <div class="stats-card">
+      <div class="stats-header">
+        <h3>创作情况</h3>
+        <span class="stats-badge">持续创作中</span>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="totalWords">32,847</div>
+          <div class="stat-label">累计字数</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="streakDays">7</div>
+          <div class="stat-label">连续创作天数</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="worksCount">5</div>
+          <div class="stat-label">作品数</div>
+        </div>
+      </div>
+      <div class="stats-milestone">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>相当于完成了圣埃克苏佩里的《小王子》</span>
+      </div>
+    </div>
+
+    <!-- 近期作品 -->
+    <div class="recent-works">
+      <div class="recent-header">
+        <h3>近期作品</h3>
+        <a href="#" class="view-more" onclick="showWorksList(); return false;">查看更多 &rarr;</a>
+      </div>
+      <div class="works-list">
+        <!-- 作品1 -->
+        <div class="work-item">
+          <div class="work-info">
+            <div class="work-scene-tag novel-tag">小说</div>
+            <div class="work-details">
+              <h4>《星际迷航：暗影纪元》</h4>
+              <p class="work-meta">已完成 5 章 &middot; 18,234 字 &middot; 更新于 2 小时前</p>
+            </div>
+          </div>
+          <div class="work-actions">
+            <button class="btn-primary btn-sm" onclick="enterWorkstation('novel', 'work1')">开始写作</button>
+            <button class="btn-icon" onclick="showWorkMenu(this, event)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+          </div>
+        </div>
+        <!-- 作品2 -->
+        <div class="work-item">
+          <div class="work-info">
+            <div class="work-scene-tag script-tag">剧本</div>
+            <div class="work-details">
+              <h4>《雾中列车》</h4>
+              <p class="work-meta">已完成 3 幕 &middot; 8,620 字 &middot; 更新于 昨天</p>
+            </div>
+          </div>
+          <div class="work-actions">
+            <button class="btn-primary btn-sm" onclick="enterWorkstation('script', 'work2')">开始写作</button>
+            <button class="btn-icon" onclick="showWorkMenu(this, event)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+          </div>
+        </div>
+        <!-- 作品3 -->
+        <div class="work-item">
+          <div class="work-info">
+            <div class="work-scene-tag storyboard-tag">脚本</div>
+            <div class="work-details">
+              <h4>《深渊回响》短剧分镜</h4>
+              <p class="work-meta">已完成 12 场 &middot; 5,993 字 &middot; 更新于 3 天前</p>
+            </div>
+          </div>
+          <div class="work-actions">
+            <button class="btn-primary btn-sm" onclick="enterWorkstation('storyboard', 'work3')">开始写作</button>
+            <button class="btn-icon" onclick="showWorkMenu(this, event)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 案例推荐区 -->
+  <section class="cases-section">
+    <div class="section-header">
+      <h2>案例推荐</h2>
+    </div>
+    <div class="cases-grid">
+      <div class="case-card" onclick="enterWorkstation('novel', 'case1')">
+        <div class="case-cover novel-cover">
+          <span class="case-type">小说</span>
+        </div>
+        <h4>都市悬疑：《第七封信》</h4>
+        <p>一封匿名信揭开尘封20年的真相，融合密室推理与情感悬疑</p>
+        <div class="case-stats">
+          <span>4.2万字</span>
+          <span>1,284 人阅读</span>
+        </div>
+      </div>
+      <div class="case-card" onclick="enterWorkstation('script', 'case2')">
+        <div class="case-cover script-cover">
+          <span class="case-type">剧本</span>
+        </div>
+        <h4>科幻短片：《最后的园丁》</h4>
+        <p>人类灭绝后，一个AI继续打理花园的故事</p>
+        <div class="case-stats">
+          <span>1.8万字</span>
+          <span>856 人阅读</span>
+        </div>
+      </div>
+      <div class="case-card" onclick="enterWorkstation('interpret', 'case3')">
+        <div class="case-cover interpret-cover">
+          <span class="case-type">解读</span>
+        </div>
+        <h4>《百年孤独》深度解读</h4>
+        <p>从时间循环与家族宿命解读马尔克斯的魔幻现实主义</p>
+        <div class="case-stats">
+          <span>0.8万字</span>
+          <span>2,103 人阅读</span>
+        </div>
+      </div>
+      <div class="case-card" onclick="enterWorkstation('novel', 'case4')">
+        <div class="case-cover novel-cover">
+          <span class="case-type">小说</span>
+        </div>
+        <h4>古风仙侠：《沧溟剑歌》</h4>
+        <p>少年负剑入江湖，一把残剑引出上古秘辛</p>
+        <div class="case-stats">
+          <span>6.5万字</span>
+          <span>3,420 人阅读</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 右键菜单（作品更多操作） -->
+<div class="context-menu" id="workContextMenu" style="display:none;">
+  <div class="menu-item" onclick="exportWork('txt')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    导出为 TXT
+  </div>
+  <div class="menu-item" onclick="exportWork('doc')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    导出为 DOC
+  </div>
+  <div class="menu-item" onclick="exportWork('pdf')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    导出为 PDF
+  </div>
+  <div class="menu-divider"></div>
+  <div class="menu-item" onclick="copyLink()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+    复制链接
+  </div>
+  <div class="menu-divider"></div>
+  <div class="menu-item danger" onclick="deleteWork()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+    删除作品
+  </div>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+<script src="home.js"></script>
+</body>
+</html>
