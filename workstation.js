@@ -385,10 +385,6 @@ function addChapter() {
   list.appendChild(item);
   showToast(`已添加新${config.chapterLabel}`);
 }
-  item.onclick = function() { selectChapter(count, item); };
-  list.appendChild(item);
-  showToast('已添加新章节');
-}
 
 function numberToChinese(n) {
   const chars = ['零','一','二','三','四','五','六','七','八','九','十'];
